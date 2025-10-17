@@ -6,6 +6,10 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from config.config import Config, load_config
 from database.database import init_db
+from handlers.other import other_router
+from handlers.user import user_router
+from keyboards.menu_commands import set_main_menu
+from service.file_handling import prepare_text
 
 #from database.database import init_db
 
@@ -32,12 +36,15 @@ async def main():
     dp = Dispatcher()
 
     logger.info('Подготовка книги!')
-    book = prepare_book("book/book.txt")
+    book = prepare_text("book/book.txt")
     logger.info('book is upload. Total pages %d',len(book))
 
     db: dict = init_db()
 
     dp.workflow_data.update(book=book, db=db)
+
+    # dp.workflow_data["book"] = book
+    # dp.workflow_data["db"] = db
 
     await set_main_menu(bot)
 
